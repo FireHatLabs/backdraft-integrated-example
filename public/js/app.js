@@ -1,6 +1,4 @@
 $(function() {
-
-  Templates(function() {
     var BDApp = Ember.Application.create({
       LOG_TRANSITIONS: true
     });
@@ -11,7 +9,5 @@ $(function() {
     
     Models(BDApp);
     Controllers(BDApp);
-    Routes(BDApp);   
-  });
-
+    Routes(BDApp);
 });

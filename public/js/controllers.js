@@ -2,7 +2,14 @@ var Controllers = function Controllers (BDApp) {
   console.log("Controllers Loaded");
 
   BDApp.ApplicationController = Ember.Controller.extend({
-    isAuthenticated: false
+    authenticated: false,
+    checkLogin: function () {
+      if (this.get('authenticated')) {
+        return true;
+      } else {
+        this.controllerFor('login').transitionToRoute('login');
+      }
+    }
   });
 
   BDApp.ItemsController = Ember.ArrayController.extend({
@@ -28,7 +35,7 @@ var Controllers = function Controllers (BDApp) {
 
   BDApp.AccountController = Ember.ArrayController.extend({
     isAuthenticated: function() {
-      return BDApp.ApplicationController.get('isAuthenticated');
+      this.controllerFor('application').send('checkLogin');
     },
     itemsCount: Ember.computed.alias('length')
   });
@@ -46,7 +53,7 @@ var Controllers = function Controllers (BDApp) {
 
         login.save().then(function (auth) {
           console.log('Log in!');
-          BDApp.ApplicationController.isAuthenticated = true;
+          this.get('application').set('authenticated', true);
           controller.transitionToRoute('account');
         });        
       },

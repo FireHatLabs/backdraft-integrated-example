@@ -2,9 +2,15 @@ extends layout
 
 block content
 
+    include hb/index.hb
+    include hb/account.hb
+    include hb/item.hb
+    include hb/login.hb
+    include hb/nav.hb
+    include hb/registration.hb
+
 block scripts
 
-    script(src='js/templates.js')
     script(src='js/routes.js')
     script(src='js/controllers.js')
     script(src='js/models.js')
