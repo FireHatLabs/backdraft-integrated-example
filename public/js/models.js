@@ -1,6 +1,6 @@
 var Models = function Models (BDApp) {
   console.log("Models Loaded");
-//BDApp.ApplicationAdapter = DS.FixtureAdapter.extend();
+
   BDApp.ApplicationAdapter = DS.RESTAdapter.extend({
     namespace: 'api',
     host: 'http://127.0.0.1:3000'

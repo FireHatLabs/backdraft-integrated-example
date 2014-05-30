@@ -1,5 +1,6 @@
 var Controllers = function Controllers (BDApp) {
   console.log("Controllers Loaded");
+
   BDApp.ApplicationController = Ember.Controller.extend({
     isAuthenticated: false
   });

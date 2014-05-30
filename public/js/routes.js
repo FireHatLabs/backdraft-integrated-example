@@ -1,13 +1,13 @@
 var Routes = function Routes (BDApp) {
   console.log("Routes Loaded");
-  Ember.Inflector.inflector.irregular('auth', 'authenticated');
+  Ember.Inflector.inflector.irregular('auth', 'authenticate');
   Ember.Inflector.inflector.irregular('registration', 'register');
 
   BDApp.Router.map(function () {
     this.route('register');
     this.route('login');
 
-    this.resource('auth', { path: "/authenticated" });
+    this.resource('auth');
 
     this.resource('account');
 
@@ -43,7 +43,6 @@ var Routes = function Routes (BDApp) {
   BDApp.ItemsRoute = Ember.Route.extend({
     model: function () {
       return this.store.findAll('item');
-      //return this.store.find('item', { order: 'title' });
     }
   });
 
@@ -52,17 +51,7 @@ var Routes = function Routes (BDApp) {
   BDApp.AuthRoute = Ember.Route.extend({
     model: function () {
       return this.store.findAll('auth');
-      //return this.store.find('item', { order: 'title' });
     }
   });
 
-  /*
-   DS.rejectionHandler = function(reason) {
-   if (reason.status === 401) {
-   console.log('401 Received');
-
-   }
-   throw reason;
-   };
-   */
 };
