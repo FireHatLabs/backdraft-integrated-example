@@ -6,13 +6,10 @@
     <div class="ui two column middle aligned relaxed grid basic segment">
       <div class="column">
 
-        <div class="ui error form segment">
+        <div class="ui form segment">
          <h1>Log In</h1>
 
-          <div class="ui error message">
-            <div class="header">Login Error</div>
-            <p>Could not sign in!</p>
-          </div>
+          <div class="ui error message"></div>
 
             <form>
               <div class="field">
@@ -53,7 +50,7 @@
 
       </div>
     </div>
-
+    
     <footer>
         <p>Backdraft Startup App</p>
     </footer>
