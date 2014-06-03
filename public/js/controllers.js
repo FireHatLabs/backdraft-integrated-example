@@ -35,6 +35,7 @@ var Controllers = function Controllers (BDApp) {
 
   BDApp.AccountController = Ember.ArrayController.extend({
     isAuthenticated: function() {
+      console.log('AccountControlller: isAuthenticated');
       this.controllerFor('application').send('checkLogin');
     },
     itemsCount: Ember.computed.alias('length')

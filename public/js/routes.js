@@ -2,6 +2,7 @@ var Routes = function Routes (BDApp) {
   console.log("Routes Loaded");
   Ember.Inflector.inflector.irregular('auth', 'authenticate');
   Ember.Inflector.inflector.irregular('registration', 'register');
+  Ember.Inflector.inflector.irregular('account', 'user');
 
   BDApp.Router.map(function () {
     this.route('register');
