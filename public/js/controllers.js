@@ -39,7 +39,7 @@ var Controllers = function Controllers (BDApp) {
 
         login.save().then(function (auth) {
           console.log('Log in!');
-          this.controllerFor('application').set('authenticated', true);
+          controller.controllerFor('application').set('authenticated', true);
           controller.transitionToRoute('account');
         });        
       },
