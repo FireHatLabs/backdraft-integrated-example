@@ -9,7 +9,6 @@ var Routes = function Routes (BDApp) {
     this.route('login');
 
     this.resource('auth');
-
     this.resource('account');
 
     this.resource('items', function () {
@@ -42,6 +41,13 @@ var Routes = function Routes (BDApp) {
 // Items ////////////////////////////////
 
   BDApp.ItemsRoute = Ember.Route.extend({
+    beforeModel: function(transition) {
+      if (!this.controllerFor('application').get('authenticated')) {
+        var loginController = this.controllerFor('login');
+        loginController.set('previousTransition', transition);
+        this.transitionTo('login');
+      }
+    },
     model: function () {
       return this.store.findAll('item');
     }

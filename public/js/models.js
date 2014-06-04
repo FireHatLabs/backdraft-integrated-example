@@ -1,11 +1,6 @@
 var Models = function Models (BDApp) {
   console.log("Models Loaded");
 
-  BDApp.ApplicationAdapter = DS.RESTAdapter.extend({
-    namespace: 'api' //,
-    //host: 'http://127.0.0.1:3000'
-  });
-
   BDApp.Item = DS.Model.extend({
     title: DS.attr('string'),
     description: DS.attr('string'),
@@ -26,15 +21,23 @@ var Models = function Models (BDApp) {
   });
 
   BDApp.Account = DS.Model.extend({
+    subscriber: DS.attr('boolean')
+  });
+
+  BDApp.User = DS.Model.extend({
+    authenticated: DS.attr('boolean'),
     firstName: DS.attr('string'),
     lastName: DS.attr('string'),
     email: DS.attr('string')
   });
 
   BDApp.Auth = DS.Model.extend({
-    authenticated: DS.attr('boolean'),
     email: DS.attr('string'),
     password: DS.attr('string')
+  });
+
+  BDApp.Response = DS.Model.extend({
+    code: DS.attr('number')
   });
 
 };

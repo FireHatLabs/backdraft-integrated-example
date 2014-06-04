@@ -1,17 +1,6 @@
 var Controllers = function Controllers (BDApp) {
   console.log("Controllers Loaded");
 
-  BDApp.ApplicationController = Ember.Controller.extend({
-    authenticated: false,
-    checkLogin: function () {
-      if (this.get('authenticated')) {
-        return true;
-      } else {
-        this.controllerFor('login').transitionToRoute('login');
-      }
-    }
-  });
-
   BDApp.ItemsController = Ember.ArrayController.extend({
     sortProperties: ['title'],
     sortAscending: true,
@@ -34,11 +23,7 @@ var Controllers = function Controllers (BDApp) {
   });
 
   BDApp.AccountController = Ember.ArrayController.extend({
-    isAuthenticated: function() {
-      console.log('AccountControlller: isAuthenticated');
-      this.controllerFor('application').send('checkLogin');
-    },
-    itemsCount: Ember.computed.alias('length')
+
   });
 
   BDApp.LoginController = Ember.ArrayController.extend({
@@ -54,7 +39,7 @@ var Controllers = function Controllers (BDApp) {
 
         login.save().then(function (auth) {
           console.log('Log in!');
-          this.get('application').set('authenticated', true);
+          this.controllerFor('application').set('authenticated', true);
           controller.transitionToRoute('account');
         });        
       },
