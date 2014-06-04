@@ -21,14 +21,16 @@ var Models = function Models (BDApp) {
   });
 
   BDApp.Account = DS.Model.extend({
-    subscriber: DS.attr('boolean')
+    subscriber: DS.attr('boolean'),
+    user: DS.belongsTo('user')
   });
 
   BDApp.User = DS.Model.extend({
     authenticated: DS.attr('boolean'),
     firstName: DS.attr('string'),
     lastName: DS.attr('string'),
-    email: DS.attr('string')
+    email: DS.attr('string'),
+    account: DS.belongsTo('account')
   });
 
   BDApp.Auth = DS.Model.extend({

@@ -2,15 +2,12 @@ var Routes = function Routes (BDApp) {
   console.log("Routes Loaded");
   Ember.Inflector.inflector.irregular('auth', 'authenticate');
   Ember.Inflector.inflector.irregular('registration', 'register');
-  Ember.Inflector.inflector.irregular('account', 'user');
 
   BDApp.Router.map(function () {
     this.route('register');
     this.route('login');
-
-    this.resource('auth');
     this.resource('account');
-
+    this.resource('auth');
     this.resource('items', function () {
       this.resource('item', { path: '/:item_id' });
     });

@@ -4,6 +4,12 @@
     {{else}}
         <h3>Not Logged In</h3>
     {{/if}}
-        <h1>Hello {{firstName}} {{lastName}}</h1>
-        <p>There are {{itemsCount}} items in your account.</p>  
+        <h1>Hello {{booboo}} {{user.firstName}} {{user.lastName}}</h1>
+
+
+          <div class="some-item">
+            {{log account}}
+            {{debugger}}
+            {{this}}
+          </div>
 </script>

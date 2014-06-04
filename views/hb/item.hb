@@ -25,6 +25,11 @@
             {{outlet}}
         </div>
     </div>
+              <div class="some-item">
+                {{log account}}
+                {{debugger}}
+                {{this}}
+              </div>
 </script>    
 
 <script type="text/x-handlebars" id="item">
