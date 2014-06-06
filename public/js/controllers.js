@@ -23,7 +23,11 @@ var Controllers = function Controllers (BDApp) {
   });
 
   BDApp.AccountController = Ember.ArrayController.extend({
-    booboo: 'hi'
+    isAuthenticated: true,
+    booboo: 'hi',
+    user: function() {
+      return {lastName: "TEST", firstName: "TESTER"}
+    }
   });
 
   BDApp.LoginController = Ember.ArrayController.extend({

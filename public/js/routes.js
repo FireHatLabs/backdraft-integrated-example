@@ -31,7 +31,7 @@ var Routes = function Routes (BDApp) {
 
   BDApp.AccountsRoute = Ember.Route.extend({
     model: function () {
-      return this.store.findAll('account');
+      return this.store.find('account');
     }
   });
 

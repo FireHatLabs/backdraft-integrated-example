@@ -8,8 +8,8 @@
 
 
           <div class="some-item">
-            {{log account}}
-            {{debugger}}
-            {{this}}
+            {-{log account}}
+            {-{debugger}}
+            {-{this}}
           </div>
 </script>
