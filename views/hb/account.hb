@@ -7,9 +7,9 @@
         <h1>Hello {{booboo}} {{user.firstName}} {{user.lastName}}</h1>
 
 
-          <div class="some-item">
-            {-{log account}}
-            {-{debugger}}
-            {-{this}}
+          <div class="well">
+            <pre>
+                {{{json isAuthenticated}}}
+            </pre>
           </div>
 </script>

@@ -25,11 +25,15 @@
             {{outlet}}
         </div>
     </div>
-              <div class="some-item">
-                {{log account}}
-                {{debugger}}
-                {{this}}
-              </div>
+
+
+
+          <div class="well">
+            <pre>
+                {{{json items}}}
+            </pre>
+          </div>
+
 </script>    
 
 <script type="text/x-handlebars" id="item">

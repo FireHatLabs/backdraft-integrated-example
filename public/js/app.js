@@ -1,4 +1,11 @@
 $(function() {
+    Handlebars.registerHelper('json', function(object) {
+      return new Handlebars.SafeString(
+              JSON.stringify(object)
+      );
+    });
+
+
     var BDApp = Ember.Application.create({
       LOG_TRANSITIONS: true
     });
