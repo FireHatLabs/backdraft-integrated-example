@@ -9,7 +9,7 @@ var module = angular.module('bdServices', ['ngResource']); /*jshint -W079 */
 
 module.factory(
 		'User',
-		['LoopBackResource', 'LoopBackAuth', function (Resource, LoopBackAuth) {
+		['BDResource', 'BDAuth', function (Resource, BDAuth) {
 			return Resource( /*jshint -W058 */
 					urlBase,
 					{ 'id': '@id' },
@@ -19,12 +19,10 @@ module.factory(
 							method: 'POST',
 							interceptor: {
 								response: function (response) {
-									console.log ("--login:interceptor:response");
-									var accessToken = response.data;
-									LoopBackAuth.currentUserId = accessToken.userId;
-									LoopBackAuth.accessTokenId = accessToken.id;
-									LoopBackAuth.rememberMe = response.config.params.rememberMe !== false;
-									LoopBackAuth.save();
+									BDAuth.userId = response.data.user.id;
+									BDAuth.userInfo = response.data.user;
+									BDAuth.rememberMe = response.config.params.rememberMe !== false;
+									BDAuth.save();
 									return response.resource;
 								}
 							}
@@ -34,9 +32,9 @@ module.factory(
 							method: 'POST',
 							interceptor: {
 								response: function (response) {
-									LoopBackAuth.currentUserId = null;
-									LoopBackAuth.accessTokenId = null;
-									LoopBackAuth.save();
+                  BDAuth.userId = null;
+                  BDAuth.userInfo = null;
+									BDAuth.save();
 									return response.resource;
 								}
 							}
@@ -133,11 +131,11 @@ module.factory(
 							method: 'DELETE'
 						},
 						'getCurrent': {
-							url: urlBase + '/authenticated',
+							url: urlBase + '/authenticate',
 							method: 'GET',
 							params: {
 								id: function () {
-									var id = LoopBackAuth.currentUserId;
+									var id = BDAuth.userId;
 									if (id === null) id = '__anonymous__';
 									return id;
 								}
@@ -151,70 +149,8 @@ module.factory(
 /////////////////////////////////////////////////////////////////////////////
 
 module.factory(
-		'AccessToken',
-		['LoopBackResource', 'LoopBackAuth', function (Resource, LoopBackAuth) {
-			return Resource( /*jshint -W058 */
-							urlBase + '/accessTokens/:id',
-					{ 'id': '@id' },
-					{
-						'create': {
-							url: urlBase + '/accessTokens',
-							method: 'POST'
-						},
-						'updateOrCreate': {
-							url: urlBase + '/accessTokens',
-							method: 'PUT'
-						},
-						'upsert': {
-							url: urlBase + '/accessTokens',
-							method: 'PUT'
-						},
-						'exists': {
-							url: urlBase + '/accessTokens/:id/exists',
-							method: 'GET'
-						},
-						'findById': {
-							url: urlBase + '/accessTokens/:id',
-							method: 'GET'
-						},
-						'find': {
-							url: urlBase + '/accessTokens',
-							method: 'GET',
-							isArray: true
-						},
-						'findOne': {
-							url: urlBase + '/accessTokens/findOne',
-							method: 'GET'
-						},
-						'destroyById': {
-							url: urlBase + '/accessTokens/:id',
-							method: 'DELETE'
-						},
-						'deleteById': {
-							url: urlBase + '/accessTokens/:id',
-							method: 'DELETE'
-						},
-						'removeById': {
-							url: urlBase + '/accessTokens/:id',
-							method: 'DELETE'
-						},
-						'count': {
-							url: urlBase + '/accessTokens/count',
-							method: 'GET'
-						},
-						'prototype$updateAttributes': {
-							url: urlBase + '/accessTokens/:id',
-							method: 'PUT'
-						}
-					}
-			);
-		}]);
-
-/////////////////////////////////////////////////////////////////////////////
-
-module.factory(
 		'Account',
-		['LoopBackResource', 'LoopBackAuth', function (Resource, LoopBackAuth) {
+		['BDResource', 'BDAuth', function (Resource, BDAuth) {
 			return Resource( /*jshint -W058 */
 							urlBase + '/accounts/:id',
 					{ 'id': '@id' },
@@ -289,7 +225,7 @@ module.factory(
 
 module.factory(
 		'Item',
-		['LoopBackResource', 'LoopBackAuth', function (Resource, LoopBackAuth) {
+		['BDResource', 'BDAuth', function (Resource, BDAuth) {
 			return Resource( /*jshint -W058 */
 							urlBase + '/items/:id',
 					{ 'id': '@id' },
@@ -350,10 +286,10 @@ module.factory(
 /////////////////////////////////////////////////////////////////////////////
 
 module
-		.factory('LoopBackAuth', function () {
-			var props = ['accessTokenId', 'currentUserId'];
+		.factory('BDAuth', function () {
+			var props = ['userId', 'userInfo'];
 
-			function LoopBackAuth() {
+			function BDAuth() {
 				props.forEach(function (name) {
 					this[name] = load(name);
 				}.bind(this));
@@ -363,43 +299,40 @@ module
 			// Note: LocalStorage converts the value to string
 			// We are using empty string as a marker for null/undefined values.
 			function save(storage, name, value) {
-				var key = '$LoopBack$' + name;
+				var key = '$BD$' + name;
 				if (value === null) value = '';
 				storage[key] = value;
 			}
 
 			function load(name) {
-				var key = '$LoopBack$' + name;
+				var key = '$BackDraft$' + name;
 				return localStorage[key] || sessionStorage[key] || null;
 			}
 
-			LoopBackAuth.prototype.save = function () {
+			BDAuth.prototype.save = function () {
 				var storage = this.rememberMe ? localStorage : sessionStorage;
 				props.forEach(function (name) {
 					save(storage, name, this[name]);
 				}.bind(this));
 			};
 
-			return new LoopBackAuth();
+			return new BDAuth();
 
 		})
 		.config(function ($httpProvider) {
-			$httpProvider.interceptors.push('LoopBackAuthRequestInterceptor');
+			$httpProvider.interceptors.push('BDAuthRequestInterceptor');
 		})
-		.factory('LoopBackAuthRequestInterceptor', [ '$q', 'LoopBackAuth',
-			function ($q, LoopBackAuth) {
+		.factory('BDAuthRequestInterceptor', [ '$q', 'BDAuth',
+			function ($q, BDAuth) {
 				return {
 					'request': function (config) {
-						if (LoopBackAuth.accessTokenId) {
-							config.headers.authorization = LoopBackAuth.accessTokenId;
+						if (BDAuth.userId) {
+
 						} else if (config.__isGetCurrentUser__) {
-							// Return a stub 401 error for User.getCurrent() when
-							// there is no user logged in
 							var res = {
 								body: { error: { status: 401 } },
 								status: 401,
-								config: config,
-								headers: function () { return undefined; }
+								config: config
 							};
 							return $q.reject(res);
 						}
@@ -407,7 +340,7 @@ module
 					}
 				};
 			}])
-		.factory('LoopBackResource', [ '$resource', function ($resource) {
+		.factory('BDResource', [ '$resource', function ($resource) {
 			return function (url, params, actions) {
 				var resource = $resource(url, params, actions);
 
@@ -415,7 +348,7 @@ module
 				// This hack is based on
 				// http://kirkbushell.me/angular-js-using-ng-resource-in-a-more-restful-manner/
 				resource.prototype.$save = function (success, error) {
-					// Fortunately, LoopBack provides a convenient `upsert` method
+					// Fortunately, BD provides a convenient `upsert` method
 					// that exactly fits our needs.
 					var result = resource.upsert.call(this, {}, this, success, error);
 					return result.$promise || result;

@@ -5,6 +5,11 @@ var Responder = function Responder (api) {
     title: String,
     description: String
   });
+
+  api.authenticated.get(api.config.api.path + '/template/account', function(req, res, next) {
+    console.log ("************* Load Account Template");
+    res.render('account/overview');
+  });
   
   api.authenticated.get(api.config.api.path + '/items', function(req, res, next) {
     api.view.renderItems(res, 'items', 'title description', itemModel);

@@ -9,7 +9,7 @@ angular.module('backdraft', [
 .config(function ($routeProvider, $locationProvider, $httpProvider) {
     var isAuthenticated = function($q, $timeout, $http, $location, $rootScope) {
       var deferred = $q.defer();
-      $http.get(urlBase + '/authenticated').success(function(auth){
+      $http.get(urlBase + '/authenticate').success(function(auth){
         if (auth !== '') {
           $timeout(deferred.resolve, 0);
         } else {
@@ -24,7 +24,7 @@ angular.module('backdraft', [
 
 
 		$routeProvider.when('/account', {
-			templateUrl: 'account.html',
+			templateUrl: '/api/template/account',
 			controller: 'AppCtrl',
       resolve: {
         loggedin: isAuthenticated
