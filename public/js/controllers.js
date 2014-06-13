@@ -1,14 +1,14 @@
 angular.module('backdraft.controllers', ['backdraft.services'])
 
-.controller('AppCtrl', function ($scope, User, $location, AppAuth) {
-    AppAuth.ensureHasCurrentUser(User);	
-    $scope.currentUser = AppAuth.currentUser;
+.controller('AppCtrl', function ($scope, User, $location, Authentication) {
+      Authentication.ensureHasCurrentUser(User);
+    $scope.currentUser = Authentication.currentUser;
 			
 	$scope.options = [
 			{text: 'Logout', action: function () {
 				User.logout(function () {
 					$scope.currentUser =
-					AppAuth.currentUser = null;
+              Authentication.currentUser = null;
 					$location.path('/');
 				});
 			}}
@@ -19,7 +19,7 @@ angular.module('backdraft.controllers', ['backdraft.services'])
 		};
 })
 
-.controller('LoginCtrl', function ($scope, $routeParams, User, $location, AppAuth) {
+.controller('LoginCtrl', function ($scope, $routeParams, User, $location, Authentication) {
 		$scope.registration = {};
 		$scope.credentials = {
 			email: 'foo@bar.com',
@@ -32,7 +32,7 @@ angular.module('backdraft.controllers', ['backdraft.services'])
 				function () {
 					var next = $location.nextAfterLogin || '/account';
 					$location.nextAfterLogin = null;
-					AppAuth.currentUser = $scope.loginResult.user.id;
+          Authentication.currentUser = $scope.loginResult.user.id;
 					$location.path(next);
 				},
 				function (res) {

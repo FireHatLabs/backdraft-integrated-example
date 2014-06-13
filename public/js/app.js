@@ -46,7 +46,7 @@ angular.module('backdraft', [
 		});
 
   // Intercept 401 responses and redirect to login screen
-		$httpProvider.interceptors.push(function ($q, $location, AppAuth) {
+		$httpProvider.interceptors.push(function ($q, $location, Authentication) {
 			return {
 				responseError: function (rejection) {
 					
@@ -54,7 +54,7 @@ angular.module('backdraft', [
 							rejection.config.url, rejection.status);
 					
 					if (rejection.status === 401) {
-						AppAuth.currentUser = null;
+            Authentication.currentUser = null;
 						// save the current location so that login can redirect back
 						$location.nextAfterLogin = $location.path();
 						$location.path('/login');
@@ -65,9 +65,9 @@ angular.module('backdraft', [
 		});
 	})
 
-.run(function ($rootScope, $location, AppAuth) {
+.run(function ($rootScope, $location, $window, Authentication) {
 		$rootScope.$on('$routeChangeStart', function (event, next, current) {
-			console.log('AppAuth.currentUser', AppAuth.currentUser);
+			console.log('Authentication.currentUser', Authentication.currentUser);
 			console.log('$location.path()', $location.path());
 		});
 
