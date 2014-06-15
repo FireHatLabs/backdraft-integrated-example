@@ -28,11 +28,11 @@ angular.module('backdraft.controllers', ['backdraft.services'])
 	
 		$scope.login = function () {
 			
-			$scope.loginResult = User.login({}, $scope.credentials,
-				function () {
+			$scope.loginResult = User.login($scope.credentials,
+				function (data) {
 					var next = $location.nextAfterLogin || '/account';
 					$location.nextAfterLogin = null;
-          Authentication.currentUser = $scope.loginResult.user.id;
+          Authentication.currentUser = data.user.id;
 					$location.path(next);
 				},
 				function (res) {
@@ -42,7 +42,7 @@ angular.module('backdraft.controllers', ['backdraft.services'])
 		};
 			
 		$scope.register = function () {
-			$scope.user = User.create({registration: $scope.registration},
+			$scope.user = User.register($scope.registration,
 				function () {
 					$location.path('/login');
 				},

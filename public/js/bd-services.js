@@ -47,14 +47,20 @@ module.factory('Token', function ($q, $window, $location, Authentication){
 
 module.factory('User', function ($http) {
   return {
-    login: function (username, password) {
-      return $http.post(apiUri + '/login', {username: username, password: password});
+    login: function (credentials, next, err) {
+      $http.post(apiUri + '/login', credentials).
+          success(function(data, status, headers, config) {
+            next(data);
+          }).
+          error(function(data, status, headers, config) {
+            next(data);
+          });
     },
-    logout: function (rejection) {
-      return $http.post(apiUri + '/logout');
+    logout: function (rejection, next, err) {
+      return $http.post(apiUri + '/logout').success(next());
     },
-    register: function (username, password, passwordConfirmation) {
-      return $http.post(apiUri + '/register', {username: username, password: password, passwordConfirmation: passwordConfirmation });
+    register: function (registration, next, err) {
+      return $http.post(apiUri + '/register', registration).success(next());
     }
   };
 });
