@@ -9,7 +9,23 @@ module.factory('Authentication', function (){
   var status = {
     authenticated: false,
     manager: false,
-    currentUser: {}
+    currentUser: {},
+    established: function (User) {
+      if (this.currentUser.id !== undefined) {
+        console.log('Using cached current user.');
+      } else {
+        console.log('Fetching current user from the server.');
+        var auth = this;
+        User.current(function (user) {
+          console.log ('CurrentUser: Success');
+          auth.currentUser = user;
+          // success
+        }, function (response) {
+          console.log('User.getCurrent() err', arguments);
+          auth.currentUser = null;
+        });
+      }
+    }
   };
 
   return status;
@@ -60,7 +76,14 @@ module.factory('User', function ($http) {
       return $http.post(apiUri + '/logout').success(next());
     },
     register: function (registration, next, err) {
-      return $http.post(apiUri + '/register', registration).success(next());
+      $http.post(apiUri + '/register', registration).
+          success(next());
+    },
+    current: function (next, err) {
+      $http.get(apiUri + '/user').
+          success(function(data, status, headers, config) {
+              next(data.user);
+          });
     }
   };
 });
