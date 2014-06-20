@@ -7,25 +7,7 @@ var module = angular.module('bdServices', []);
 
 module.factory('Authentication', function (){
   var status = {
-    authenticated: false,
-    manager: false,
-    currentUser: {},
-    established: function (User) {
-      if (this.currentUser.id !== undefined) {
-        console.log('Using cached current user.');
-      } else {
-        console.log('Fetching current user from the server.');
-        var auth = this;
-        User.current(function (user) {
-          console.log ('CurrentUser: Success');
-          auth.currentUser = user;
-          // success
-        }, function (response) {
-          console.log('User.getCurrent() err', arguments);
-          auth.currentUser = null;
-        });
-      }
-    }
+    manager: false
   };
 
   return status;

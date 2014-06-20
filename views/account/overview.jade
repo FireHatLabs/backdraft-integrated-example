@@ -1,16 +1,16 @@
-div(ng-show="isAuthenticated()")
+div(ng-show="authenticated")
     header
       h1 Account Details
       
     section
         h2 Account:
-            {{ currentUser.firstName }} {{ currentUser.lastName }}
+            | {{ currentUser.firstName }} {{ currentUser.lastName }}
     
         h2 Items
     
         ul.list
             li.item(ng-repeat="item in currentUser.items")
-                {{ item.pos }}). <strong>{{ item.title }}</strong> - {{ item.time | date:'medium' }}
+                | {{ item.pos }}). <strong>{{ item.title }}</strong> - {{ item.time | date:'medium' }}
 
     footer
         p Backdraft Startup App

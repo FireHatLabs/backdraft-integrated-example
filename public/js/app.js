@@ -10,11 +10,14 @@ angular.module('backdraft', [
     var isAuthenticated = function($q, $timeout, $http, $location, $rootScope) {
       var deferred = $q.defer();
       $http.get(apiUri + '/authenticate').success(function(auth){
-        if (auth !== '') {
+        if (auth.auth.authenticated === true) {
           $timeout(deferred.resolve, 0);
+          $rootScope.authenticated = true;
+          $rootScope.currentUser = auth.user;
         } else {
           $rootScope.message = "You must log in.";
           $timeout(function(){deferred.reject();}, 0);
+          $rootScope.authenticated = false;
           $location.url('/login');
         }
       });
@@ -47,22 +50,26 @@ angular.module('backdraft', [
 
   // Intercept 401 responses and redirect to login screen
 		$httpProvider.interceptors.push(function ($q, $location, Authentication) {
-			return {
-				responseError: function (rejection) {
-					
-					console.log('intercepted rejection of ',
-							rejection.config.url, rejection.status);
-					
-					if (rejection.status === 401) {
-            Authentication.currentUser = null;
-						// save the current location so that login can redirect back
-						$location.nextAfterLogin = $location.path();
-						$location.path('/login');
-					}
-					return $q.reject(rejection);
-				}
-			};
-		});
+      return function(promise) {
+        return promise.then(
+            function (response) {
+              return response;
+            },
+
+            function (response) {
+              if (response.status === 401) {
+                Authentication.currentUser = null;
+                // save the current location so that login can redirect back
+                $location.nextAfterLogin = $location.path();
+                $location.path('/login');
+              }
+            
+              return $q.reject(response);
+            }
+        );
+      }
+    });  
+      
 	})
 
 .run(function ($rootScope, $location, $window, Authentication) {

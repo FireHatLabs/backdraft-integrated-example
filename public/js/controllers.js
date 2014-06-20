@@ -1,15 +1,11 @@
 angular.module('backdraft.controllers', ['backdraft.services'])
 
 .controller('AppCtrl', function ($scope, User, $location, Authentication) {
-  Authentication.established(User);
-  $scope.currentUser = Authentication.currentUser;
-
 			
 	$scope.options = [
 			{text: 'Logout', action: function () {
 				User.logout(function () {
-					$scope.currentUser =
-              Authentication.currentUser = null;
+					$scope.currentUser = null;
 					$location.path('/');
 				});
 			}}
@@ -33,7 +29,6 @@ angular.module('backdraft.controllers', ['backdraft.services'])
 				function (data) {
 					var next = $location.nextAfterLogin || '/account';
 					$location.nextAfterLogin = null;
-          Authentication.currentUser = data.user;
 					$location.path(next);
 				},
 				function (res) {
